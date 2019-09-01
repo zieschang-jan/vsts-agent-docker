@@ -1,4 +1,4 @@
-FROM microsoft/vsts-agent:ubuntu-16.04-standard
+FROM janzi/vsts-build-agents:ubuntu-16.04-standard
 
 ENV DOCKER_CHANNEL stable
 ENV DOCKER_VERSION 18.06.1-ce

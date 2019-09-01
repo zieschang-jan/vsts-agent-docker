@@ -1,4 +1,4 @@
-FROM janzi/vsts-build-agents:ubuntu-16.04
+FROM janzi/vsts-build-agents:ubuntu-18.04
 
 # Install basic command-line utilities
 RUN apt-get update \
@@ -20,6 +20,9 @@ RUN apt-get update \
     wget \
     zip \
     tzdata \
+    apt-transport-https \
+    lsb-release \
+    gnupg \
  && rm -rf /var/lib/apt/lists/*
 
 # Setup the locale
@@ -134,18 +137,18 @@ RUN curl -sL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.
  && rm miniconda.sh
 ENV CONDA=/usr/share/miniconda
 
-# Install Mono
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
- && echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
- && apt-get update \
- && apt-get install -y --no-install-recommends apt-transport-https mono-complete \
- && rm -rf /var/lib/apt/lists/* \
- && rm -rf /etc/apt/sources.list.d/*
+# # Install Mono
+# RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+#  && echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | tee /etc/apt/sources.list.d/mono-official-stable.list \
+#  && apt-get update \
+#  && apt-get install -y --no-install-recommends apt-transport-https mono-complete \
+#  && rm -rf /var/lib/apt/lists/* \
+#  && rm -rf /etc/apt/sources.list.d/*
 
 # Install MS SQL Server client tools (https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?view=sql-server-2017)
 RUN [ "xenial" = "xenial" ] \
   && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | tee /etc/apt/sources.list.d/msprod.list \
+  && curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list | tee /etc/apt/sources.list.d/msprod.list \
   && apt-get update \
   && apt-get install -y mssql-tools unixodbc-dev \
   && rm -rf /var/lib/apt/lists/* \
@@ -168,7 +171,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # Install .NET Core SDK and initialize package cache
-RUN curl https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb > packages-microsoft-prod.deb \
+RUN curl https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb > packages-microsoft-prod.deb \
  && dpkg -i packages-microsoft-prod.deb \
  && rm packages-microsoft-prod.deb \
  && apt-get update \
@@ -182,12 +185,21 @@ ENV dotnet=/usr/bin/dotnet
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 # Install AzCopy (depends on .NET Core)
-RUN apt-key adv --keyserver packages.microsoft.com --recv-keys EB3E94ADBE1229CF \
- && echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod/ xenial main" | tee /etc/apt/sources.list.d/azure.list \
- && apt-get update \
- && apt-get install -y --no-install-recommends azcopy \
- && rm -rf /var/lib/apt/lists/* \
- && rm -rf /etc/apt/sources.list.d/*
+# RUN apt-key adv --keyserver packages.microsoft.com --recv-keys EB3E94ADBE1229CF \
+#  && echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod/ xenial main" | tee /etc/apt/sources.list.d/azure.list \
+#  && apt-get update \
+#  && apt-get install -y --no-install-recommends azcopy \
+#  && rm -rf /var/lib/apt/lists/* \
+#  && rm -rf /etc/apt/sources.list.d/*
+RUN wget https://aka.ms/downloadazcopy-v10-linux \
+   && tar -xvf downloadazcopy-v10-linux --strip-components=1  \
+   && mv ./azcopy /usr/bin/ \
+   && rm -rf downloadazcopy-v10-linux \
+ENV PATH="/usr/bin:${PATH}"
+
+#Expand Archive
+#(Optional) Remove existing AzCopy version
+#Move AzCopy to the destination you want to store it
 
 # Install LTS Node.js and related tools
 RUN curl -sL https://git.io/n-install | bash -s -- -ny - \
@@ -220,7 +232,7 @@ ENV bower=/usr/local/bin/bower \
 
 # Install Powershell Core
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
- && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | tee /etc/apt/sources.list.d/microsoft.list \
+ && curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list | tee /etc/apt/sources.list.d/microsoft.list \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
     powershell \
@@ -282,7 +294,8 @@ RUN apt-get update \
 
 # Download hosted tool cache
 ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
-RUN azcopy --recursive --source https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux --destination $AGENT_TOOLSDIRECTORY
+RUN mkdir -p $AGENT_TOOLSDIRECTORY \
+   && /usr/bin/azcopy copy https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux $AGENT_TOOLSDIRECTORY --recursive
 
 # Install the tools from the hosted tool cache
 RUN original_directory=$PWD \

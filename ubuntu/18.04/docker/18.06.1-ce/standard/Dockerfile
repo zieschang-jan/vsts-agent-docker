@@ -1,4 +1,4 @@
-FROM janzi/vsts-build-agents:ubuntu-16.04
+FROM janzi/vsts-build-agents:ubuntu-18.04-standard
 
 ENV DOCKER_CHANNEL stable
 ENV DOCKER_VERSION 18.06.1-ce
@@ -9,7 +9,7 @@ RUN set -ex \
  && rm docker.tgz \
  && docker -v
 
-ENV DOCKER_COMPOSE_VERSION 1.22.0
+ENV DOCKER_COMPOSE_VERSION 1.24.1
 
 RUN set -x \
  && curl -fSL "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m`" -o /usr/local/bin/docker-compose \
