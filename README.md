@@ -1,23 +1,40 @@
-# Deprecated
+# fork VSTS-Build-Agents
 
-This repo and Docker container are deprecated.
-To run the agent in a Docker container, see [the docs]()https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops.
+Forked the VSTS Build Agents [Azure Pipelines Agent](https://hub.docker.com/_/microsoft-azure-pipelines-vsts-agent)
 
 You may be looking for the Azure Pipelines hosted images, which are generated in the [azure-pipelines-image-generation](https://github.com/Microsoft/azure-pipelines-image-generation) repo.
 
 ![](https://github.com/jzi96/vsts-agent-docker/raw/master/images/vsts.png)
 
+## Build status
+
+|Version  |Build Status  |
+|---------|---------|
+|Ubuntu 16.04     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/16.04/vsts.16.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=6&branchName=master) |
+|Ubuntu 16.04 Standard | [![Build Status ](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/16.04/vsts.standard-16.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=8&branchName=master) |
+|Ubuntu 16.04 Docker Standard     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/16.04/vsts.docker-standard-16.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=9&branchName=master) |
+|Ubuntu 18.04     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/18.04/vsts.18.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=12&branchName=master) |
+|Ubuntu 18.04 Standard     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/18.04/vsts.standard-18.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=11&branchName=master) |
+|Ubuntu 18.04 Docker Standard     |  [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/18.04/vsts.docker-standard-18.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=10&branchName=master) |
+
 ## Visual Studio Team Services agent
+
 This repository contains images for the Visual Studio Team Services (VSTS) agent that runs tasks as part of a build or release.
 
 ## Supported tags and `Dockerfile` links
+
 VSTS agent images are tagged according to the base OS, an optional Team Foundation Server (TFS) version, and tools that are installed:
 
 - [`ubuntu-16.04`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/Dockerfile) [(ubuntu/16.04/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/Dockerfile)
 - [`ubuntu-16.04-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/standard/Dockerfile) [(ubuntu/16.04/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/standard/Dockerfile)
-- [`ubuntu-16.04-docker-18.06.1-ce-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile), [`latest`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile) [(ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile)
+- [`ubuntu-16.04-docker-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile), [`latest`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile) [(ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/16.04/docker/18.06.1-ce/standard/Dockerfile)
 
-Ubuntu 14.04 and 16.04 are the currently supported OSes, but there are plans for Windows support.
+- [`ubuntu-18.04`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/Dockerfile) [(ubuntu/18.04/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/Dockerfile)
+- [`ubuntu-18.04-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/standard/Dockerfile) [(ubuntu/18.04/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/standard/Dockerfile)
+- [`ubuntu-18.04-docker-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile), [`latest`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile) [(ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile)
+
+
+Ubuntu 18.04 and 16.04 are the currently supported OSes, but there are plans for Windows support.
 
 When used with VSTS, the agent version is automatically determined and downloaded at container startup based on the account to which the agent is connecting. When used with TFS, an image that matches the installed TFS version should be chosen.
 
