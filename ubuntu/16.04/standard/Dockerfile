@@ -25,6 +25,9 @@ RUN apt-get update \
 # Setup the locale
 ENV LANG en_US.UTF-8
 ENV LC_ALL $LANG
+# For us it runs longer, so no need to drop it
+# ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+
 RUN locale-gen $LANG \
  && update-locale
 
