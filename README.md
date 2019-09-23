@@ -229,3 +229,14 @@ docker run \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -it mcr.microsoft.com/azure-pipelines/vsts-agent:ubuntu-16.04-docker-17.12.0-ce
 ```
+
+## Kubenetes Deployment
+
+Here is a sample yaml to deploy the container. You need to prepare the secret for the container.
+
+1. Configure the secret
+```cmd
+kubectl create secret vsts
+kubectl create secret generic vsts --from-literal=VSTS_TOKEN=<PAT> --from-literal=VSTS_ACCOUNT=<my-account>
+```
+2. Deploy the controller and container by running `kubectl create -f <pathtoyaml>` command. The yaml is in [Github repo](https://github.com/jzi96/vsts-agent-docker/blob/master/kubernetes/deployment.yaml).
