@@ -130,7 +130,8 @@ These derived images include a set of standard capabilities that enable many of 
 - Microsoft SQL Server Client Tools 17.2.0.1
 - MySQL Client 5.7.23
 - MySQL Server 5.7.23
-- .NET Core SDK 2.2 (runtime 2.2.1)
+- .NET Core SDK 2.2
+- .NET Core SDK 3.0
 - Node.js 8.11.3 LTS (with bower, grunt, gulp, n, parcel, and webpack)
 - Powershell Core v6.1.0-preview.2
 - PyPy2 (6.0.0) and PyPy3 (6.0.0)

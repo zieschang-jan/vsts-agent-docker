@@ -178,6 +178,7 @@ RUN curl https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-p
  && apt-get install -y --no-install-recommends \
     apt-transport-https \
     dotnet-sdk-2.2 \
+    dotnet-sdk-3.0 \
  && rm -rf /var/lib/apt/lists/* \
  && rm -rf /etc/apt/sources.list.d/*
 RUN dotnet help
