@@ -22,17 +22,24 @@ RUN apt-get update \
     tzdata \
  && rm -rf /var/lib/apt/lists/*
 
-# Setup the locale
-ENV LANG en_US.UTF-8
-ENV LC_ALL $LANG
+# Enable detection of running in a container
+ENV DOTNET_RUNNING_IN_CONTAINER=true \
+    # Enable correct mode for dotnet watch (only mode supported in a container)
+    DOTNET_USE_POLLING_FILE_WATCHER=true \
+    # Skip extraction of XML docs - generally not useful within an image/container - helps performance
+    NUGET_XMLDOC_MODE=skip
 # For us it runs longer, so no need to drop it
 # ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
+# Setup the locale
+ENV LANG en_US.UTF-8 \
+    LC_ALL $LANG \
+    # Accept EULA - needed for certain Microsoft packages like SQL Server Client Tools
+    ACCEPT_EULA=Y
+
+
 RUN locale-gen $LANG \
  && update-locale
-
-# Accept EULA - needed for certain Microsoft packages like SQL Server Client Tools
-ENV ACCEPT_EULA=Y
 
 # Install essential build tools
 RUN apt-get update \
@@ -182,8 +189,8 @@ RUN curl https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-p
  && rm -rf /var/lib/apt/lists/* \
  && rm -rf /etc/apt/sources.list.d/*
 RUN dotnet help
-ENV dotnet=/usr/bin/dotnet
-ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV dotnet=/usr/bin/dotnet \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 # Install AzCopy (depends on .NET Core)
 RUN apt-key adv --keyserver packages.microsoft.com --recv-keys EB3E94ADBE1229CF \

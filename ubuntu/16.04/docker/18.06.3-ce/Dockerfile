@@ -1,8 +1,8 @@
 FROM janzi/vsts-build-agents:ubuntu-16.04
 
-ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 18.06.3-ce
-ENV DOCKER_PLATFORM x86_64
+ENV DOCKER_CHANNEL stable \
+    DOCKER_VERSION 18.06.3-ce \
+    DOCKER_PLATFORM x86_64
 
 RUN set -ex \
  && curl -fL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${DOCKER_PLATFORM}/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
