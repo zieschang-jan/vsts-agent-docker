@@ -41,8 +41,8 @@ ENV DOTNET_RUNNING_IN_CONTAINER=true \
 # ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
 # Setup the locale
-ENV LANG en_GB.UTF-8 \
-    LC_ALL $LANG \
+ENV LANG=en_US.UTF-8 \
+    LC_ALL=$LANG \
     # Accept EULA - needed for certain Microsoft packages like SQL Server Client Tools
     ACCEPT_EULA=Y
 
