@@ -312,21 +312,6 @@ RUN apt-get update \
  && apt-get install -y xvfb \
  && rm -rf /var/lib/apt/lists/*
 
-# Download hosted tool cache
-ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
-RUN mkdir -p $AGENT_TOOLSDIRECTORY \
-   && /usr/bin/azcopy copy https://vstsagenttools.blob.core.windows.net/tools/hostedtoolcache/linux $AGENT_TOOLSDIRECTORY --recursive
-
-# Install the tools from the hosted tool cache
-RUN original_directory=$PWD \
- && setups=$(find $AGENT_TOOLSDIRECTORY -name setup.sh) \
- && for setup in $setups; do \
-        chmod +x $setup; \
-        cd $(dirname $setup); \
-        ./$(basename $setup); \
-        cd $original_directory; \
-    done;
-
 # Clean system
 RUN apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
