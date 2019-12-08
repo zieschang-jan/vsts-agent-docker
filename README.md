@@ -114,14 +114,14 @@ These derived images include a set of standard capabilities that enable many of 
 - Essential build tools (gcc, make, etc.)
 - Ansible 2.6.3
 - Azure CLI 2.0.38
-- CMake 3.10.2
+- CMake 3.16.0
 - GCC 5.4.0
-- Go 1.12
-- Helm (master)
+- Go 1.13.5
+- Helm master)
 - Heroku CLI 7.7.10
 - ImageMagick 6.8.9-9
-- Java OpenJDK 8 and 11
-- Java tools (Ant 1.9.6, Gradle 4.6, Maven 3.3.9)
+- Java OpenJDK 8, 11 and 13
+- Java tools (Ant 1.9.6, Gradle 6.0, Maven 3.3.9)
 - jq 1.5-1
 - kubectl (latest stable)
 - Miniconda 4.5.4
@@ -130,11 +130,13 @@ These derived images include a set of standard capabilities that enable many of 
 - Microsoft SQL Server Client Tools 17.2.0.1
 - MySQL Client 5.7.23
 - MySQL Server 5.7.23
+- .NET Core SDK 2.1
 - .NET Core SDK 2.2
 - .NET Core SDK 3.0
+- .NET Core SDK 3.1
 - Node.js 8.11.3 LTS (with bower, grunt, gulp, n, parcel, and webpack)
 - Powershell Core v6.1.0-preview.2
-- PyPy2 (6.0.0) and PyPy3 (6.0.0)
+- PyPy2 (7.2.0) and PyPy3 (7.2.0)
 - Python 2.7.15, 3.4.8, 3.5.5, 3.6.5 and 3.7.0 (available through the [Use Python Version](https://go.microsoft.com/fwlink/?linkid=871498) task)
 - rsync 3.1.1
 - Scala sbt-extras
