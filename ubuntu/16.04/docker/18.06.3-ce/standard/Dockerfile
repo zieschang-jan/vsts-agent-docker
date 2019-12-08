@@ -1,7 +1,7 @@
 FROM janzi/vsts-build-agents:ubuntu-16.04-standard
 
 ENV DOCKER_CHANNEL stable \
-    DOCKER_VERSION 19.03.5-ce \
+    DOCKER_VERSION 18.06.3-ce \
     DOCKER_PLATFORM x86_64
 
 RUN set -ex \
