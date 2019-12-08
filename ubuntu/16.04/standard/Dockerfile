@@ -1,10 +1,11 @@
 FROM janzi/vsts-build-agents:ubuntu-16.04
 
-ENV GO_VERSION=1.13.5 \
-   CMAKE_VERSION=3.16.0 \
-   GRADLE_VERISON=6.0 \
-   PY2_VERSION=2.7-v7.2.0 \
-   PY3_VERSION=3.6-v7.2.0
+ARG GO_VERSION=1.13.5
+ARG CMAKE_MINOT_VERSION=3.16
+ARG CMAKE_VERSION=${CMAKE_MINOT_VERSION}.0
+ARG GRADLE_VERISON=6.0
+ARG PY2_VERSION=2.7-v7.2.0
+ARG PY3_VERSION=3.6-v7.2.0
 
 # Install basic command-line utilities
 RUN apt-get update \
@@ -72,7 +73,7 @@ RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb
  && az --version
 
 # Install CMake
-RUN curl -sL https://cmake.org/files/v3.10/cmake-${CMAKE_VERSION}-Linux-x86_64.sh -o cmake.sh \
+RUN curl -sL https://cmake.org/files/v${CMAKE_MINOT_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.sh -o cmake.sh \
  && chmod +x cmake.sh \
  && ./cmake.sh --prefix=/usr/local --exclude-subdir \
  && rm cmake.sh
