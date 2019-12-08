@@ -200,7 +200,7 @@ RUN curl https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-p
     dotnet-sdk-3.1 \
  && rm -rf /var/lib/apt/lists/* \
  && rm -rf /etc/apt/sources.list.d/*
-RUN dotnet help
+# RUN dotnet help
 ENV dotnet=/usr/bin/dotnet \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
 
