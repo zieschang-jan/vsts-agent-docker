@@ -1,5 +1,11 @@
 FROM janzi/vsts-build-agents:ubuntu-16.04
 
+ENV GO_VERSION=1.13.5 \
+   CMAKE_VERSION=3.16.0 \
+   GRADLE_VERISON=6.0 \
+   PY2_VERSION=2.7-v7.2.0 \
+   PY3_VERSION=3.6-v7.2.0
+
 # Install basic command-line utilities
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
@@ -66,7 +72,7 @@ RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb
  && az --version
 
 # Install CMake
-RUN curl -sL https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.sh -o cmake.sh \
+RUN curl -sL https://cmake.org/files/v3.10/cmake-${CMAKE_VERSION}-Linux-x86_64.sh -o cmake.sh \
  && chmod +x cmake.sh \
  && ./cmake.sh --prefix=/usr/local --exclude-subdir \
  && rm cmake.sh
@@ -76,12 +82,12 @@ RUN curl -sL https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.sh -o cmake
 # && mkdir -p /usr/local/go1.9.4 \
 # && tar -C /usr/local/go1.9.4 -xzf go1.9.4.linux-amd64.tar.gz --strip-components=1 go \
 # && rm go1.9.4.linux-amd64.tar.gz
-RUN curl -sL https://dl.google.com/go/go1.12.9.linux-amd64.tar.gz -o go1.12.9.linux-amd64.tar.gz \
- && mkdir -p /usr/local/go1.12.9 \
- && tar -C /usr/local/go1.12.9 -xzf go1.12.9.linux-amd64.tar.gz --strip-components=1 go \
- && rm go1.12.9.linux-amd64.tar.gz
-ENV GOROOT_1_12_X64=/usr/local/go1.12.9 \
-    GOROOT=/usr/local/go1.12.9
+RUN curl -sL https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz -o go${GO_VERSION}.linux-amd64.tar.gz \
+ && mkdir -p /usr/local/go${GO_VERSION} \
+ && tar -C /usr/local/go${GO_VERSION} -xzf go${GO_VERSION}.linux-amd64.tar.gz --strip-components=1 go \
+ && rm go${GO_VERSION}.linux-amd64.tar.gz
+ENV GOROOT_1_12_X64=/usr/local/go${GO_VERSION} \
+    GOROOT=/usr/local/go${GO_VERSION}
 #GOROOT_1_9_X64=/usr/local/go1.9.4 \
 ENV PATH $PATH:$GOROOT/bin
 
@@ -104,13 +110,13 @@ RUN apt-get update \
 RUN apt-add-repository -y ppa:openjdk-r/ppa
 RUN apt-get update \
  && apt-get install -y --no-install-recommends openjdk-8-jdk \
- && rm -rf /var/lib/apt/lists/*
-RUN apt-get update \
  && apt-get install -y --no-install-recommends openjdk-11-jdk \
+ && apt-get install -y --no-install-recommends openjdk-13-jdk \
  && rm -rf /var/lib/apt/lists/*
 RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 ENV JAVA_HOME_8_X64=/usr/lib/jvm/java-8-openjdk-amd64 \
     JAVA_HOME_11_X64=/usr/lib/jvm/java-11-openjdk-amd64 \
+    JAVA_HOME_13_X64=/usr/lib/jvm/java-13-openjdk-amd64 \
     JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
     JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
@@ -120,10 +126,10 @@ RUN apt-get update \
     ant \
     ant-optional \
  && rm -rf /var/lib/apt/lists/*
-RUN curl -sL https://services.gradle.org/distributions/gradle-4.6-bin.zip -o gradle-4.6.zip \
- && unzip -d /usr/share gradle-4.6.zip \
- && ln -s /usr/share/gradle-4.6/bin/gradle /usr/bin/gradle \
- && rm gradle-4.6.zip
+RUN curl -sL https://services.gradle.org/distributions/gradle-${GRADLE_VERISON}-bin.zip -o gradle-${GRADLE_VERISON}.zip \
+ && unzip -d /usr/share gradle-${GRADLE_VERISON}.zip \
+ && ln -s /usr/share/gradle-6.0/bin/gradle /usr/bin/gradle \
+ && rm gradle-${GRADLE_VERISON}.zip
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     maven \
@@ -184,8 +190,10 @@ RUN curl https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-p
  && apt-get update \
  && apt-get install -y --no-install-recommends \
     apt-transport-https \
+    dotnet-sdk-2.1 \
     dotnet-sdk-2.2 \
     dotnet-sdk-3.0 \
+    dotnet-sdk-3.1 \
  && rm -rf /var/lib/apt/lists/* \
  && rm -rf /etc/apt/sources.list.d/*
 RUN dotnet help
@@ -239,17 +247,17 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
  && rm -rf /etc/apt/sources.list.d/*
 
 # Instally PyPy2
-RUN wget -q -P /tmp https://bitbucket.org/pypy/pypy/downloads/pypy2-v6.0.0-linux64.tar.bz2 \
- && tar -x -C /opt -f /tmp/pypy2-v6.0.0-linux64.tar.bz2 \
- && rm /tmp/pypy2-v6.0.0-linux64.tar.bz2 \
- && mv /opt/pypy2-v6.0.0-linux64 /opt/pypy2 \
+RUN wget -q -P /tmp https://bitbucket.org/pypy/pypy/downloads/pypy${PY2_VERSION}-linux64.tar.bz2 \
+ && tar -x -C /opt -f /tmp/pypy${PY2_VERSION}-linux64.tar.bz2 \
+ && rm /tmp/pypy${PY2_VERSION}-linux64.tar.bz2 \
+ && mv /opt/pypy${PY2_VERSION}-linux64 /opt/pypy2 \
  && ln -s /opt/pypy2/bin/pypy /usr/local/bin/pypy
 
 # Install PyPy3
-RUN wget -q -P /tmp https://bitbucket.org/pypy/pypy/downloads/pypy3-v6.0.0-linux64.tar.bz2 \
- && tar -x -C /opt -f /tmp/pypy3-v6.0.0-linux64.tar.bz2 \
- && rm /tmp/pypy3-v6.0.0-linux64.tar.bz2 \
- && mv /opt/pypy3-v6.0.0-linux64 /opt/pypy3 \
+RUN wget -q -P /tmp https://bitbucket.org/pypy/pypy/downloads/pypy${PY3_VERSION}-linux64.tar.bz2 \
+ && tar -x -C /opt -f /tmp/pypy${PY3_VERSION}-linux64.tar.bz2 \
+ && rm /tmp/pypy${PY3_VERSION}-linux64.tar.bz2 \
+ && mv /opt/pypy${PY3_VERSION}-linux64 /opt/pypy3 \
  && ln -s /opt/pypy3/bin/pypy3 /usr/local/bin/pypy3
 
 # Install Python
