@@ -1,10 +1,10 @@
 FROM janzi/vsts-build-agents:ubuntu-18.04
 
-ENV GO_VERSION=1.13.5 \
-   CMAKE_VERSION=3.16.0 \
-   GRADLE_VERISON=6.0 \
-   PY2_VERSION=2.7-v7.2.0 \
-   PY3_VERSION=3.6-v7.2.0
+ARG GO_VERSION=1.13.5
+ARG CMAKE_VERSION=3.16.0
+ARG GRADLE_VERISON=6.0
+ARG PY2_VERSION=2.7-v7.2.0
+ARG PY3_VERSION=3.6-v7.2.0
 
 # Install basic command-line utilities
 RUN apt-get update \
