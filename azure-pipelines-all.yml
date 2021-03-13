@@ -1,0 +1,114 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+variables:
+  repoName: 'janzi/vsts-build-agents'
+  tagName: 'ubuntu-$(ubuntuversion)'
+  tagNamest: 'ubuntu-$(ubuntuversion)-standard'
+  tagNamedst: 'ubuntu-$(ubuntuversion)-docker-standard'
+  tag2Name: 'ubuntu-v2-$(ubuntuversion)'
+  tag2Namest: 'ubuntu-v2-$(ubuntuversion)-standard'
+  tag2Namedst: 'ubuntu-v2-$(ubuntuversion)-docker-standard'
+
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: Docker@2
+  displayName: Build base image
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagName)
+      $(tag2Name)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagName) -t $(repoName):$(tag2Name)
+
+- task: Docker@2
+  displayName: Build standard image
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/standard/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagNamest)
+      $(tag2Namest)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagNamest) -t $(repoName):$(tag2Namest)
+
+- task: Docker@2
+  displayName: Build docker standard image
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/docker/18.06.3-ce/standard/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagNamedst)
+      $(tag2Namedst)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagNamedst) -t $(repoName):$(tag2Namedst)
+
+
+
+- task: Docker@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Login to Docker Hub
+  inputs:
+    command: login
+    containerRegistry: dockerhub
+
+- task: Docker@1
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: dockerhub
+    repository: '$(repoName)'
+    includeSourceTags: true
+    addDefaultLabels: true
+    imageName: $(repoName):$(tag2Name)
+    command: 'push'
+
+- task: Docker@1
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: dockerhub
+    repository: '$(repoName)'
+    includeSourceTags: true
+    addDefaultLabels: true
+    imageName: $(repoName):$(tag2Namedst)
+    command: 'push'
+
+- task: Docker@1
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: dockerhub
+    repository: '$(repoName)'
+    includeSourceTags: true
+    addDefaultLabels: true
+    imageName: $(repoName):$(tag2Namest)
+    command: 'push'
+
+- task: Docker@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Logout of ACR
+  inputs:
+    command: logout
+    containerRegistry: dockerhub
+
