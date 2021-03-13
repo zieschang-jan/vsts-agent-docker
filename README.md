@@ -8,16 +8,13 @@ You may be looking for the Azure Pipelines hosted images, which are generated in
 
 ## Build status
 
+
+
 |Version  |Build Status  |
 |---------|---------|
-|Ubuntu 18.04 (base, standardm docker-standard) |[![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-18.04?branchName=master)]
-|Ubuntu 20.04 (base, standardm docker-standard) |[![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-20.04?branchName=master)]
-|Ubuntu 18.04     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/18.04/vsts.18.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=12&branchName=master) |
-|Ubuntu 18.04 Standard     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/18.04/vsts.standard-18.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=11&branchName=master) |
-|Ubuntu 18.04 Docker Standard     |  [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/18.04/vsts.docker-standard-18.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=10&branchName=master) |
-|Ubuntu 20.04     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/20.04/vsts.20.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=6&branchName=master) |
-|Ubuntu 20.04 Standard | [![Build Status ](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/20.04/vsts.standard-20.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=8&branchName=master) |
-|Ubuntu 20.04 Docker Standard     | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/20.04/vsts.docker-standard-20.04?branchName=master)](https://zieschang.visualstudio.com/vsts-buid-agents/_build/latest?definitionId=9&branchName=master) |
+|Ubuntu 18.04 (base, standard, docker-standard) | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-18.04?branchName=master)] |
+|Ubuntu 20.04 (base, standard, docker-standard) | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-20.04?branchName=master)] |
+
 
 ## Visual Studio Team Services agent
 
