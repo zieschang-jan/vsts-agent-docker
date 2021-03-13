@@ -12,8 +12,8 @@ You may be looking for the Azure Pipelines hosted images, which are generated in
 
 |Version  |Build Status  |
 |---------|---------|
-|Ubuntu 18.04 (base, standard, docker-standard) | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-18.04?branchName=master)] |
-|Ubuntu 20.04 (base, standard, docker-standard) | [![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-20.04?branchName=master)] |
+|Ubuntu 18.04 (base, standard, docker-standard) | ![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-18.04?branchName=master) |
+|Ubuntu 20.04 (base, standard, docker-standard) | ![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-20.04?branchName=master) |
 
 
 ## Visual Studio Team Services agent
