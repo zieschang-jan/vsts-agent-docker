@@ -15,6 +15,7 @@ You may be looking for the Azure Pipelines hosted images, which are generated in
 |Ubuntu 18.04 (base, standard, docker-standard) | ![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-18.04?branchName=master) |
 |Ubuntu 20.04 (base, standard, docker-standard) | ![Build Status](https://zieschang.visualstudio.com/vsts-buid-agents/_apis/build/status/All-at-once-20.04?branchName=master) |
 
+[Docker Images](https://hub.docker.com/repository/registry-1.docker.io/janzi/vsts-build-agents/tags?page=1&ordering=last_updated)
 
 ## Visual Studio Team Services agent
 
@@ -24,13 +25,13 @@ This repository contains images for the Visual Studio Team Services (VSTS) agent
 
 VSTS agent images are tagged according to the base OS, an optional Team Foundation Server (TFS) version, and tools that are installed:
 
-- [`ubuntu-18.04`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/Dockerfile) [(ubuntu/18.04/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/Dockerfile)
-- [`ubuntu-18.04-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/standard/Dockerfile) [(ubuntu/18.04/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/standard/Dockerfile)
-- [`ubuntu-18.04-docker-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile), [`latest`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile) [(ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile)
+- [`ubuntu-v2-18.04`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/Dockerfile) [(ubuntu/18.04/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/Dockerfile)
+- [`ubuntu-v2-18.04-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/standard/Dockerfile) [(ubuntu/18.04/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/standard/Dockerfile)
+- [`ubuntu-v2-18.04-docker-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile), [`latest`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile) [(ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/18.04/docker/18.06.1-ce/standard/Dockerfile)
 
-- [`ubuntu-20.04`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/Dockerfile) [(ubuntu/20.04/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/Dockerfile)
-- [`ubuntu-20.04-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/standard/Dockerfile) [(ubuntu/20.04/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/standard/Dockerfile)
-- [`ubuntu-20.04-docker-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile), [`latest`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile) [(ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile)
+- [`ubuntu-v2-20.04`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/Dockerfile) [(ubuntu/20.04/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/Dockerfile)
+- [`ubuntu-v2-20.04-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/standard/Dockerfile) [(ubuntu/20.04/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/standard/Dockerfile)
+- [`ubuntu-20.04-v2-docker-standard`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile), [`latest`](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile) [(ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile)](https://github.com/jzi96/vsts-agent-docker/blob/master/ubuntu/20.04/docker/18.06.1-ce/standard/Dockerfile)
 
 Ubuntu 18.04 and 20.04 are the currently supported OSes, but there are plans for Windows support.
 
