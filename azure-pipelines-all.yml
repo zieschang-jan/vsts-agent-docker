@@ -10,11 +10,8 @@ variables:
   repoName: 'janzi/vsts-build-agents'
   tagName: 'ubuntu-$(ubuntuversion)'
   tagNamest: 'ubuntu-$(ubuntuversion)-standard'
+  tagNamestb: 'ubuntu-$(ubuntuversion)-standard-buildah'
   tagNamedst: 'ubuntu-$(ubuntuversion)-docker-standard'
-  tag2Name: 'ubuntu-v2-$(ubuntuversion)'
-  tag2Namest: 'ubuntu-v2-$(ubuntuversion)-standard'
-  tag2Namedst: 'ubuntu-v2-$(ubuntuversion)-docker-standard'
-
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -31,9 +28,8 @@ steps:
       $(Build.SourceBranchName)
       $(Build.BuildId)
       $(tagName)
-      $(tag2Name)
     addPipelineData: true
-    arguments: -t $(repoName):$(tagName) -t $(repoName):$(tag2Name)
+    arguments: -t $(repoName):$(tagName)
 
 - task: Docker@2
   displayName: Build standard image
@@ -45,9 +41,22 @@ steps:
       $(Build.SourceBranchName)
       $(Build.BuildId)
       $(tagNamest)
-      $(tag2Namest)
     addPipelineData: true
-    arguments: -t $(repoName):$(tagNamest) -t $(repoName):$(tag2Namest)
+    arguments: -t $(repoName):$(tagNamest)
+
+- task: Docker@2
+  displayName: Build standard with buildah image
+  condition: and(succeeded(), eq(variables['supportBuildah'], 'true'))
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/buildah/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagNamestb)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagNamestb)
 
 - task: Docker@2
   displayName: Build docker standard image
@@ -59,11 +68,8 @@ steps:
       $(Build.SourceBranchName)
       $(Build.BuildId)
       $(tagNamedst)
-      $(tag2Namedst)
     addPipelineData: true
-    arguments: -t $(repoName):$(tagNamedst) -t $(repoName):$(tag2Namedst)
-
-
+    arguments: -t $(repoName):$(tagNamedst)
 
 - task: Docker@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -80,7 +86,7 @@ steps:
     repository: '$(repoName)'
     includeSourceTags: true
     addDefaultLabels: true
-    imageName: $(repoName):$(tag2Name)
+    imageName: $(repoName):$(tagName)
     command: 'push'
 
 - task: Docker@1
@@ -91,8 +97,20 @@ steps:
     repository: '$(repoName)'
     includeSourceTags: true
     addDefaultLabels: true
-    imageName: $(repoName):$(tag2Namedst)
+    imageName: $(repoName):$(tagNamedst)
     command: 'push'
+
+- task: Docker@1
+  condition: and(succeeded(), and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['supportBuildah'], 'true')))
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: dockerhub
+    repository: '$(repoName)'
+    includeSourceTags: true
+    addDefaultLabels: true
+    imageName: $(repoName):$(tagNamestb)
+    command: 'push'
+
 
 - task: Docker@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -102,7 +120,7 @@ steps:
     repository: '$(repoName)'
     includeSourceTags: true
     addDefaultLabels: true
-    imageName: $(repoName):$(tag2Namest)
+    imageName: $(repoName):$(tagNamest)
     command: 'push'
 
 - task: Docker@2

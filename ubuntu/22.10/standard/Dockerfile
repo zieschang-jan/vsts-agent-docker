@@ -1,12 +1,12 @@
-# docker build -t janzi/vsts-build-agents:ubuntu-20.04-standard standard/.
+# docker build -t janzi/vsts-build-agents:ubuntu-22.10-standard standard/.
 
-FROM janzi/vsts-build-agents:ubuntu-20.04
+FROM janzi/vsts-build-agents:ubuntu-22.10
 
-ARG GO_VERSION=1.13.5
-ARG CMAKE_MINOT_VERSION=3.16
+ARG GO_VERSION=1.19.4
+ARG CMAKE_MINOT_VERSION=3.25
 ARG CMAKE_VERSION=${CMAKE_MINOT_VERSION}.0
 ARG GRADLE_VERISON=6.0
-ARG PY2_VERSION=2.7-v7.3.3
+#ARG PY2_VERSION=2.7-v7.3.3
 ARG PY3_VERSION=3.6-v7.3.3
 
 # Install basic command-line utilities
@@ -66,19 +66,28 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Install Azure CLI (instructions taken from https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" \
-  | tee /etc/apt/sources.list.d/azure-cli.list \
- && curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
- && apt-get update \
- && apt-get install -y --no-install-recommends \
-    apt-transport-https \
-    azure-cli \
- && rm -rf /var/lib/apt/lists/* \
- && rm -rf /etc/apt/sources.list.d/* \
- && az --version
+RUN apt-get update \
+   && apt-get install -y --no-install-recommends \
+     ca-certificates \
+     curl \
+     apt-transport-https \
+     lsb-release \
+     gnupg \
+   && curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
+     gpg --dearmor | \
+     tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null \
+   #&& AZ_REPO=$(lsb_release -cs) \
+   && AZ_REPO="jammy" \
+   && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+     tee /etc/apt/sources.list.d/azure-cli.list \
+   && apt-get update \
+   && apt-get install azure-cli -y \
+   && rm -rf /var/lib/apt/lists/* \
+   && rm -rf /etc/apt/sources.list.d/* \
+   && az --version
 
 # Install CMake
-RUN curl -sL https://cmake.org/files/v${CMAKE_MINOT_VERSION}/cmake-${CMAKE_VERSION}-Linux-x86_64.sh -o cmake.sh \
+RUN curl -sL https://cmake.org/files/v${CMAKE_MINOT_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.sh -o cmake.sh \
  && chmod +x cmake.sh \
  && ./cmake.sh --prefix=/usr/local --exclude-subdir \
  && rm cmake.sh
@@ -167,7 +176,7 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s
 # Install MS SQL Server client tools (https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?view=sql-server-2017)
 RUN [ "xenial" = "xenial" ] \
   && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/msprod.list \
+  && curl "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list" | tee /etc/apt/sources.list.d/msprod.list \
   && apt-get update \
   && apt-get install -y mssql-tools unixodbc-dev \
   && rm -rf /var/lib/apt/lists/* \
@@ -190,19 +199,19 @@ ENV PATH=$PATH:/opt/mssql-tools/bin
 #  && rm -rf /var/lib/apt/lists/*
 
 # Install .NET Core SDK and initialize package cache
-RUN curl https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb > packages-microsoft-prod.deb \
- && dpkg -i packages-microsoft-prod.deb \
- && rm packages-microsoft-prod.deb \
- && apt-get update \
- && apt-get install -y --no-install-recommends \
-    apt-transport-https \
-    dotnet-sdk-6.0 \
-    dotnet-sdk-7.0 \
- && rm -rf /var/lib/apt/lists/* \
- && rm -rf /etc/apt/sources.list.d/*
-# RUN dotnet help
-ENV dotnet=/usr/bin/dotnet \
-    DOTNET_CLI_TELEMETRY_OPTOUT=1
+RUN curl "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb" > packages-microsoft-prod.deb \
+   && dpkg -i packages-microsoft-prod.deb \
+   && rm packages-microsoft-prod.deb \
+   && apt-get update \
+   && apt-get install -y --no-install-recommends \
+      apt-transport-https \
+      dotnet-sdk-6.0 \
+      dotnet-sdk-7.0 \
+   && rm -rf /var/lib/apt/lists/* \
+   && rm -rf /etc/apt/sources.list.d/*
+  # RUN dotnet help
+  ENV dotnet=/usr/bin/dotnet \
+      DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 # Install AzCopy (depends on .NET Core)
 # RUN apt-key adv --keyserver packages.microsoft.com --recv-keys EB3E94ADBE1229CF \
@@ -250,14 +259,15 @@ ENV bower=/usr/local/bin/bower \
 #  && apt-get install -y --no-install-recommends pollinate \
 #  && rm -rf /var/lib/apt/lists/*
 
-# Install Powershell Core
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
- && curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/microsoft.list \
- && apt-get update \
- && apt-get install -y --no-install-recommends \
-    powershell \
- && rm -rf /var/lib/apt/lists/* \
- && rm -rf /etc/apt/sources.list.d/*
+## Install Powershell Core
+#RUN curl "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb" > packages-microsoft-prod.deb \
+#   && dpkg -i packages-microsoft-prod.deb \
+#   && rm packages-microsoft-prod.deb \
+#   && apt-get update \
+#   && apt-get install -y --no-install-recommends \
+#    powershell \
+# && rm -rf /var/lib/apt/lists/* \
+# && rm -rf /etc/apt/sources.list.d/*
 
 ## Instally PyPy2
 #RUN curl https://downloads.python.org/pypy/pypy${PY2_VERSION}-linux64.tar.bz2 --output /tmp/pypy${PY2_VERSION}-linux64.tar.bz2 \
