@@ -11,6 +11,8 @@ variables:
   tagName: 'ubuntu-$(ubuntuversion)'
   tagNamest: 'ubuntu-$(ubuntuversion)-standard'
   tagNamestb: 'ubuntu-$(ubuntuversion)-standard-buildah'
+  tagNamestl: 'ubuntu-$(ubuntuversion)-lite'
+  tagNamestlb: 'ubuntu-$(ubuntuversion)-lite-buildah'
   tagNamedst: 'ubuntu-$(ubuntuversion)-docker-standard'
 
 pool:
@@ -30,6 +32,20 @@ steps:
       $(tagName)
     addPipelineData: true
     arguments: -t $(repoName):$(tagName)
+
+- task: Docker@2
+  displayName: Build smaller image
+  condition: and(succeeded(), eq(variables['supportBuildah'], 'true'))
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/lite/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagNamestl)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagNamestl)
 
 - task: Docker@2
   displayName: Build standard image
@@ -59,6 +75,20 @@ steps:
     arguments: -t $(repoName):$(tagNamestb)
 
 - task: Docker@2
+  displayName: Build small with buildah image
+  condition: and(succeeded(), eq(variables['supportBuildah'], 'true'))
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/buildah/lite/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagNamestlb)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagNamestlb)
+
+- task: Docker@2
   displayName: Build docker standard image
   inputs:
     command: 'build'
@@ -80,6 +110,7 @@ steps:
 
 - task: Docker@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Push vsts base
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: dockerhub
@@ -91,6 +122,7 @@ steps:
 
 - task: Docker@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Push docker standard image
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: dockerhub
@@ -102,6 +134,31 @@ steps:
 
 - task: Docker@1
   condition: and(succeeded(), and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['supportBuildah'], 'true')))
+  displayName: Push small version of standard
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: dockerhub
+    repository: '$(repoName)'
+    includeSourceTags: true
+    addDefaultLabels: true
+    imageName: $(repoName):$(tagNamestl)
+    command: 'push'
+
+- task: Docker@1
+  condition: and(succeeded(), and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['supportBuildah'], 'true')))
+  displayName: Push buildah small version
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: dockerhub
+    repository: '$(repoName)'
+    includeSourceTags: true
+    addDefaultLabels: true
+    imageName: $(repoName):$(tagNamestlb)
+    command: 'push'
+
+- task: Docker@1
+  condition: and(succeeded(), and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['supportBuildah'], 'true')))
+  displayName: Push buildah standard version
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: dockerhub
@@ -114,6 +171,7 @@ steps:
 
 - task: Docker@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Push standard image
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: dockerhub
