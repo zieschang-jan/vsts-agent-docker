@@ -8,8 +8,9 @@ trigger:
 
 variables:
   repoName: 'janzi/vsts-build-agents'
-  tagBaseName: 'ubuntu-$(ubuntuversion)'
-  tagName: '$(tagBaseName)-standard'
+  tagNameBase: 'ubuntu-$(ubuntuversion)'
+  tagNameStd: '$(tagNameBase)-standard'
+  tagNameBuildah: '$(tagNameStd)-buildah'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -25,12 +26,12 @@ steps:
     tags: |
       $(Build.SourceBranchName)
       $(Build.BuildId)
-      $(tagBaseName)
+      $(tagNameBase)
     addPipelineData: true
-    arguments: -t $(repoName):$(tagBaseName)
+    arguments: -t $(repoName):$(tagNameBase)
 
 - task: Docker@2
-  displayName: Build base image
+  displayName: Build build standard image
   inputs:
     command: 'build'
     containerRegistry: $(registryName)
@@ -39,9 +40,22 @@ steps:
     tags: |
       $(Build.SourceBranchName)
       $(Build.BuildId)
-      $(tagName)
+      $(tagNameStd)
     addPipelineData: true
-    arguments: -t $(repoName):$(tagName)
+    arguments: -t $(repoName):$(tagNameStd)
+
+- task: Docker@2
+  displayName: Build Standard Buildah image
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/buildah/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagNameBuildah)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagNameBuildah)
 
 - task: Docker@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -51,4 +65,13 @@ steps:
     Dockerfile: 'ubuntu/$(ubuntuversion)/standard/Dockerfile'
     repository: '$(repoName)'
     tags: |
-      $(tagName)    
+      $(tagNameStd)    
+- task: Docker@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: 'push'
+    containerRegistry: marketshub
+    Dockerfile: 'ubuntu/$(ubuntuversion)/buildah/Dockerfile'
+    repository: '$(repoName)'
+    tags: |
+      $(tagNameBuildah)    
