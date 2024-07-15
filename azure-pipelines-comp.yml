@@ -1,0 +1,39 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+variables:
+  repoName: 'janzi/vsts-build-agents'
+  tagName: 'ubuntu-$(ubuntuversion)-standard'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: Docker@2
+  displayName: Build base image
+  inputs:
+    command: 'build'
+    repository: '$(repoName)'
+    Dockerfile: 'ubuntu/$(ubuntuversion)/Dockerfile'
+    tags: |
+      $(Build.SourceBranchName)
+      $(Build.BuildId)
+      $(tagName)
+    addPipelineData: true
+    arguments: -t $(repoName):$(tagName)
+
+- task: Docker@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: 'push'
+    containerRegistry: marketshub
+    Dockerfile: 'ubuntu/$(ubuntuversion)/Dockerfile'
+    repository: '$(repoName)'
+    tags: |
+      $(tagName)    
