@@ -122,34 +122,34 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Install Java zulujdk
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 \
-   && apt-add-repository 'deb http://repos.azulsystems.com/ubuntu stable main' \
-   && apt-get update \
-   && apt-get install -y --no-install-recommends zulu-21 \
-   && apt-get install -y --no-install-recommends zulu-14 \
-   && rm -rf /var/lib/apt/lists/*
-ENV JAVA_HOME_21_X64=/usr/lib/jvm/zulu-21-amd64 \
-    JAVA_HOME_14_X64=/usr/lib/jvm/zulu-14-amd64 \
-    JAVA_HOME=/usr/lib/jvm/zulu11jdk-amd64 \
-    JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
-
-# Install Java Tools (Ant, Gradle, Maven)
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-    ant \
-    ant-optional \
- && rm -rf /var/lib/apt/lists/*
-RUN curl -sL https://services.gradle.org/distributions/gradle-${GRADLE_VERISON}-bin.zip -o gradle-${GRADLE_VERISON}.zip \
- && unzip -d /usr/share gradle-${GRADLE_VERISON}.zip \
- && ln -s /usr/share/gradle-6.0/bin/gradle /usr/bin/gradle \
- && rm gradle-${GRADLE_VERISON}.zip
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-    maven \
- && rm -rf /var/lib/apt/lists/*
-ENV ANT_HOME=/usr/share/ant \
-    GRADLE_HOME=/usr/share/gradle \
-    M2_HOME=/usr/share/maven
+# RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 \
+#    && apt-add-repository 'deb http://repos.azulsystems.com/ubuntu stable main' \
+#    && apt-get update \
+#    && apt-get install -y --no-install-recommends zulu-21 \
+#    && apt-get install -y --no-install-recommends zulu-14 \
+#    && rm -rf /var/lib/apt/lists/*
+# ENV JAVA_HOME_21_X64=/usr/lib/jvm/zulu-21-amd64 \
+#     JAVA_HOME_14_X64=/usr/lib/jvm/zulu-14-amd64 \
+#     JAVA_HOME=/usr/lib/jvm/zulu11jdk-amd64 \
+#     JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+# 
+# # Install Java Tools (Ant, Gradle, Maven)
+# RUN apt-get update \
+#  && apt-get install -y --no-install-recommends \
+#     ant \
+#     ant-optional \
+#  && rm -rf /var/lib/apt/lists/*
+# RUN curl -sL https://services.gradle.org/distributions/gradle-${GRADLE_VERISON}-bin.zip -o gradle-${GRADLE_VERISON}.zip \
+#  && unzip -d /usr/share gradle-${GRADLE_VERISON}.zip \
+#  && ln -s /usr/share/gradle-6.0/bin/gradle /usr/bin/gradle \
+#  && rm gradle-${GRADLE_VERISON}.zip
+# RUN apt-get update \
+#  && apt-get install -y --no-install-recommends \
+#     maven \
+#  && rm -rf /var/lib/apt/lists/*
+# ENV ANT_HOME=/usr/share/ant \
+#     GRADLE_HOME=/usr/share/gradle \
+#     M2_HOME=/usr/share/maven
 
 # Install kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
