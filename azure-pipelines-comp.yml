@@ -20,6 +20,7 @@ steps:
   displayName: Build base image
   inputs:
     command: 'build'
+    containerRegistry: $(registryName)
     repository: '$(repoName)'
     Dockerfile: 'ubuntu/$(ubuntuversion)/Dockerfile'
     tags: |
@@ -33,6 +34,7 @@ steps:
   displayName: Build build standard image
   inputs:
     command: 'build'
+    containerRegistry: $(registryName)
     repository: '$(repoName)'
     Dockerfile: 'ubuntu/$(ubuntuversion)/standard/Dockerfile'
     tags: |
@@ -46,6 +48,7 @@ steps:
   displayName: Build Standard Buildah image
   inputs:
     command: 'build'
+    containerRegistry: 
     repository: '$(repoName)'
     Dockerfile: 'ubuntu/$(ubuntuversion)/buildah/Dockerfile'
     tags: |
@@ -59,7 +62,7 @@ steps:
   #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     command: 'push'
-    containerRegistry: marketshub
+    containerRegistry: $(registryName)
     Dockerfile: 'ubuntu/$(ubuntuversion)/standard/Dockerfile'
     repository: '$(repoName)'
     tags: |
@@ -68,7 +71,7 @@ steps:
   #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     command: 'push'
-    containerRegistry: marketshub
+    containerRegistry: $(registryName)
     Dockerfile: 'ubuntu/$(ubuntuversion)/buildah/Dockerfile'
     repository: '$(repoName)'
     tags: |
