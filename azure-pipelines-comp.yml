@@ -56,7 +56,7 @@ steps:
     arguments: -t $(repoName):$(tagNameBuildah)
 
 - task: Docker@2
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     command: 'push'
     containerRegistry: marketshub
@@ -65,7 +65,7 @@ steps:
     tags: |
       $(tagNameStd)    
 - task: Docker@2
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     command: 'push'
     containerRegistry: marketshub
